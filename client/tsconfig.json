@@ -18,9 +18,10 @@
     "experimentalDecorators": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    "noImplicitAny": false
   },
   "include": [
-    "src"
+    "src", "../common/interfaces.ts"
   ]
 }

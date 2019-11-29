@@ -6,12 +6,19 @@ import {
 } from '@material-ui/core';
 
 import {
-    IUser,
-    IProps
-} from '../interfaces'
+    IUser
+} from '../../../../common/interfaces'
 
 import UserStore from '../stores/UserStore'
 import './Join.css'
+
+import { History, LocationState } from "history";
+
+interface IProps {
+    someOfYourOwnProps: any;
+    history: History<LocationState>;
+    someMorePropsIfNeedIt: any;
+}
 
 class Join extends Component<IProps, { inputName: string, inputRoom: string, error: boolean }> {
     constructor(props: any) {

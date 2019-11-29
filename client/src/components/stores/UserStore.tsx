@@ -1,5 +1,5 @@
 import {observable} from 'mobx'
-import {IUser} from'../interfaces'
+import {IUser} from'../../../../common/interfaces'
 
 class UserStore {
     

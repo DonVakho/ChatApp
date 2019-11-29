@@ -3,15 +3,27 @@ import io from 'socket.io-client'
 import { observer } from 'mobx-react'
 import { Redirect } from 'react-router-dom'
 
-import { IErrorObject } from '../interfaces'
+import {
+    IErrorObject,
+    ISocketEvent
+} from '../../../../common/interfaces'
 
 import UserStore from '../stores/UserStore'
 
-let socket: any;
+import InfoBar from '../InfoBar/InfoBar'
+import Input from '../Input/Input'
+import Messages from '../Messages/Messages'
+
+import './Chat.css'
+
+var socket: any;
 
 const Chat = observer(() => {
-    const [loggedUser] = useState(UserStore.getUser())
     const ENDPOINT: string = 'localhost:5000'
+    var [loggedUser] = useState(UserStore.getUser())
+    var [message, setMessage] = useState('')
+    var [messages, setMessages] = useState([] as ISocketEvent[])
+
     if (!loggedUser.name || !loggedUser.room) {
         UserStore.setUnauthorizedAttempt(true)
         return <Redirect to='/' />
@@ -20,17 +32,36 @@ const Chat = observer(() => {
         useEffect(() => {
             socket = io(ENDPOINT)
             socket.emit('join', { name: loggedUser.name, room: loggedUser.room }, (error: IErrorObject) => {
-                alert(error.message)
+                if (error)
+                    alert(error.message)
             })
             return () => {
                 socket.emit('disconnect')
                 socket.off();
             }
-        }, [ENDPOINT])
+        }, [ENDPOINT, loggedUser.name, loggedUser.room])
+
+        useEffect(() => {
+            socket.on('message', (message: ISocketEvent) => {
+                setMessages([...messages, message])
+            })
+        }, [messages])
     }
+
+    const sendMessage = (event: any) => {
+        event.preventDefault()
+        if (message) {
+            socket.emit('sendMessage', message, () => setMessage(''))
+        }
+    }
+
     return (
-        <div>
-            {loggedUser.name}
+        <div className="outerContainer">
+            <div className="container">
+                <InfoBar room={loggedUser.room}/>
+                <Messages messages={messages} name={loggedUser.name}/>
+                <Input message={message} setMessage={setMessage} sendMessage={sendMessage}/>
+            </div>
         </div>
     )
 })
