@@ -10,7 +10,7 @@ import './Messages.css';
 
 import {
   ISocketEvent
-} from '../../../../common/interfaces'
+} from '../../interfaces'
 
 interface IProps {
   messages: ISocketEvent[]

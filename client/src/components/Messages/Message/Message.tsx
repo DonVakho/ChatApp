@@ -6,7 +6,7 @@ import ReactEmoji from 'react-emoji';
 
 import {
   ISocketEvent
-} from '../../../../../common/interfaces'
+} from '../../../interfaces'
 
 interface IProps {
   message: ISocketEvent

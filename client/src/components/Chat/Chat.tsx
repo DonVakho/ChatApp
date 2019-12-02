@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom'
 import {
     IErrorObject,
     ISocketEvent
-} from '../../../../common/interfaces'
+} from '../../interfaces'
 
 import UserStore from '../stores/UserStore'
 
@@ -61,7 +61,7 @@ const Chat = observer(() => {
                 <InfoBar room={loggedUser.room}/>
                 <Messages messages={messages} name={loggedUser.name}/>
                 <Input message={message} setMessage={setMessage} sendMessage={sendMessage}/>
-            </div>
+            </div> 
         </div>
     )
 })

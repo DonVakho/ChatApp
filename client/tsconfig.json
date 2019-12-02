@@ -22,6 +22,6 @@
     "noImplicitAny": false
   },
   "include": [
-    "src", "../common/interfaces.ts"
+    "src", "src/interfaces.ts"
   ]
 }

@@ -1,8 +1,6 @@
-import { IUser, IErrorObject, IAddUserReturn } from '../common/interfaces'
+var users = []
 
-var users: IUser[] = []
-
-export const addUser = ({ id, name, room }): IAddUserReturn => {
+const addUser = ({ id, name, room }) => {
     name = name.trim().toLowerCase();
     room = room.trim().toLowerCase();
     
@@ -17,7 +15,7 @@ export const addUser = ({ id, name, room }): IAddUserReturn => {
         }
     }
 
-    let newUser: IUser = { id, name, room }
+    let newUser = { id, name, room }
 
     users.push(newUser)
 
@@ -27,7 +25,7 @@ export const addUser = ({ id, name, room }): IAddUserReturn => {
     }
 }
 
-export const removeUser = (id: string) => {
+const removeUser = (id) => {
     const index = users.findIndex((user) => user.id === id)
 
     if (index !== -1) {
@@ -35,6 +33,8 @@ export const removeUser = (id: string) => {
     }
 }
 
-export const getUser = (id: string) => users.find((user) => user.id === id)
+const getUser = (id) => users.find((user) => user.id === id)
 
-export const getAllUsersInRom = (room: string) => users.filter((user) => user.room === room)
+const getAllUsersInRom = (room) => users.filter((user) => user.room === room)
+
+module.exports = { addUser, removeUser, getUser, getAllUsersInRom };

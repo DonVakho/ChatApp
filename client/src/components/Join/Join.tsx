@@ -7,7 +7,7 @@ import {
 
 import {
     IUser
-} from '../../../../common/interfaces'
+} from '../../interfaces'
 
 import UserStore from '../stores/UserStore'
 import './Join.css'
