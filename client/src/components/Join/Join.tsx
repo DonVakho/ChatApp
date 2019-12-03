@@ -1,16 +1,24 @@
 import React, { Component } from 'react'
+import { ApolloConsumer } from 'react-apollo'
 
 import {
     FormControl,
-    FormHelperText
+    FormHelperText,
 } from '@material-ui/core';
 
 import {
-    IUser
-} from '../../interfaces'
+    GreenButton,
+    BlueButton,
+    PurpleButton
+} from '../StyledComponents/Styled'
 
-import UserStore from '../stores/UserStore'
-import './Join.css'
+import {
+    GET_USER_CONFIRMATION
+} from '../Queries/Queries'
+
+import Store from '../Stores/Store'
+
+import './Join.css';
 
 import { History, LocationState } from "history";
 
@@ -20,58 +28,80 @@ interface IProps {
     someMorePropsIfNeedIt: any;
 }
 
-class Join extends Component<IProps, { inputName: string, inputRoom: string, error: boolean }> {
+class Join extends Component<IProps, { userName: string, password: string, error: boolean, errorMessage: string }> {
     constructor(props: any) {
         super(props)
         this.state = {
-            inputName: '',
-            inputRoom: '',
-            error: false
+            userName: '',
+            password: '',
+            error: false,
+            errorMessage: ''
         }
-        this.logIn = this.logIn.bind(this)
-        UserStore.setUser({name: '', room: '', id: ''})
-    }
-
-    logIn(event: any) {
-        if (!this.state.inputName || !this.state.inputRoom) {
-            event.preventDefault()
-            this.setState({ error: true })
-        } else {
-            this.setState({ error: false })
-            UserStore.setUser({
-                name: this.state.inputName,
-                room: this.state.inputRoom
-            } as IUser)
-            this.props.history.push('/chat')
-        }
+        Store.setUser()
     }
 
     render() {
         const loginForm = (
-            <FormControl className="joinInnerContainer">
-                <h1 className="heading">Sign In</h1>
-                <input
-                    placeholder="Name"
-                    className="joinInput"
-                    type="text" onChange={
-                        (event) => this.setState({ inputName: (event.target.value) })
-                    } />
-                <input
-                    placeholder="Room"
-                    className="joinInput mt-20"
-                    type="text" onChange={
-                        (event) => this.setState({ inputRoom: (event.target.value) })
-                    } />
-                <button className="button mt-20" type="button" onClick={this.logIn}>Sign In</button>
-                <FormHelperText
-                    error={this.state.error}
-                    style={{ display: (this.state.error) ? '' : 'none' }}> Please Enter name and room
-                </FormHelperText>
-                <FormHelperText
-                    error={UserStore.getUnauthorizedAttempt()}
-                    style={{ display: (UserStore.getUnauthorizedAttempt()) ? '' : 'none' }}> nice try, enter name and room
-                </FormHelperText>
-            </FormControl>
+            <ApolloConsumer>
+                {client => (
+                    <FormControl className="joinInnerContainer">
+                        <h1 className="heading">Sign In</h1>
+                        <input
+                            placeholder="Username"
+                            className="joinInput"
+                            type="text" onChange={
+                                (event) => this.setState({ userName: (event.target.value) })
+                            } />
+                        <input
+                            placeholder="Password"
+                            className="joinInput mt-20"
+                            type="password" onChange={
+                                (event) => this.setState({ password: (event.target.value) })
+                            } />
+
+                        <GreenButton onClick={async (e) => {
+                            e.preventDefault()
+                            if (!this.state.userName || !this.state.password) {
+                                this.setState({ errorMessage: 'Please fill Username and Password', error: true })
+                            } else {
+                                const { data } = await client.query({
+                                    query: GET_USER_CONFIRMATION,
+                                    variables: {
+                                        userName: this.state.userName,
+                                        password: this.state.password
+                                    }
+                                })
+                                if (!data.userConf) {
+                                    this.setState({ errorMessage: 'Username or Password is incorect', error: true })
+                                } else {
+                                    Store.setUser({
+                                        userName: data.userConf.userName,
+                                        roomId: data.userConf.roomId
+                                    })
+                                }
+                            }
+                        }}>Sign In</GreenButton>
+                        <div style={{ flex: 1, flexDirection: 'row' }}>
+                            <BlueButton
+                                className="mt-20-r"
+                                onClick={() => { this.props.history.push('/register-user') }} >
+                                Register User
+                            </BlueButton>
+                            <PurpleButton
+                                className="mrg-l wdt-half"
+                                onClick={() => { this.props.history.push('/create-room') }} >
+                                Create Room
+                            </PurpleButton>
+                        </div>
+
+                        <FormHelperText
+                            error={this.state.error}
+                            style={{ display: (this.state.error) ? '' : 'none' }}>
+                            {this.state.errorMessage}
+                        </FormHelperText>
+                    </FormControl>
+                )}
+            </ApolloConsumer>
         )
 
         return (

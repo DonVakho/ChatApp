@@ -8,7 +8,7 @@ import {
     ISocketEvent
 } from '../../interfaces'
 
-import UserStore from '../stores/UserStore'
+import UserStore from '../Stores/Store'
 
 import InfoBar from '../InfoBar/InfoBar'
 import Input from '../Input/Input'
@@ -24,14 +24,14 @@ const Chat = observer(() => {
     var [message, setMessage] = useState('')
     var [messages, setMessages] = useState([] as ISocketEvent[])
 
-    if (!loggedUser.name || !loggedUser.room) {
-        UserStore.setUnauthorizedAttempt(true)
+    if (!loggedUser.userName || !loggedUser.roomId) {
+        UserStore.setUnauthorizedAttempt()
         return <Redirect to='/' />
     } else {
         UserStore.setUnauthorizedAttempt(false)
         useEffect(() => {
             socket = io(ENDPOINT)
-            socket.emit('join', { name: loggedUser.name, room: loggedUser.room }, (error: IErrorObject) => {
+            socket.emit('join', { name: loggedUser.userName, room: loggedUser.roomId }, (error: IErrorObject) => {
                 if (error)
                     alert(error.message)
             })
@@ -39,7 +39,7 @@ const Chat = observer(() => {
                 socket.emit('disconnect')
                 socket.off();
             }
-        }, [ENDPOINT, loggedUser.name, loggedUser.room])
+        }, [ENDPOINT, loggedUser.userName, loggedUser.roomId])
 
         useEffect(() => {
             socket.on('message', (message: ISocketEvent) => {
@@ -58,10 +58,10 @@ const Chat = observer(() => {
     return (
         <div className="outerContainer">
             <div className="container">
-                <InfoBar room={loggedUser.room}/>
-                <Messages messages={messages} name={loggedUser.name}/>
-                <Input message={message} setMessage={setMessage} sendMessage={sendMessage}/>
-            </div> 
+                <InfoBar room={loggedUser.roomId} />
+                <Messages messages={messages} name={loggedUser.userName} />
+                <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+            </div>
         </div>
     )
 })

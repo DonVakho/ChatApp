@@ -3,9 +3,9 @@ import React from 'react';
 import './Input.css';
 
 interface IProps {
-    setMessage(value: string): void,
-    sendMessage(event: any): void,
-    message: string
+  setMessage(value: string): void,
+  sendMessage(event: any): void,
+  message: string
 }
 
 const Input = ({ setMessage, sendMessage, message }: IProps) => (

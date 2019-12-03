@@ -8,7 +8,7 @@ interface IProps {
     room: string
 }
 
-const InfoBar = ({ room } : IProps) => (
+const InfoBar = ({ room }: IProps) => (
     <div className="infoBar">
         <div className="leftInnerContainer">
             <img className="onlineIcon" src={onlineIcon} alt="online" />

@@ -87,6 +87,20 @@ const RootQuery = new GraphQLObjectType({
                 return User.find({});
             }
         },
+        room: {
+            type: RoomType,
+            args: { roomName: { type: GraphQLString } },
+            resolve(_, args) {
+                return Room.findOne({ roomName: args.roomName })
+            }
+        },
+        roomById: {
+            type: RoomType,
+            args: {id: {type: GraphQLString}},
+            resolve(_, args){
+                return Room.findById(args.id)
+            }
+        }
     }
 });
 
@@ -97,12 +111,14 @@ const Mutation = new GraphQLObjectType({
             type: UserType,
             args: {
                 userName: { type: new GraphQLNonNull(GraphQLString) },
-                password: { type: new GraphQLNonNull(GraphQLString) }
+                password: { type: new GraphQLNonNull(GraphQLString) },
+                roomId: { type: new GraphQLNonNull(GraphQLString) }
             },
             resolve(_, args) {
                 let user = new User({
                     userName: args.userName,
-                    password: args.password
+                    password: args.password,
+                    roomId: args.roomId
                 })
                 return user.save();
             }

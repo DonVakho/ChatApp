@@ -1,11 +1,15 @@
 export interface IUser {
-    id: string
-    name: string
-    room: string
+    userName: string,
+    roomId: string
+}
+
+export interface IRoom {
+    roomName: string,
+    roomId: string
 }
 
 export interface IErrorObject {
-    message: string
+    message: string,
 }
 
 export interface IAddUserReturn {
