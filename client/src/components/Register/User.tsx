@@ -11,29 +11,29 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import {
     BlueButtonSecondPage,
     BackButton
-} from '../StyledComponents/Styled'
+} from '../Styled'
 
 import {
     GET_ROOM_BY_ID,
+    CHECK_USERNAME_AVAILABLE,
     ADD_USER
-} from '../Queries/Queries'
+} from '../Queries'
 
 import { History, LocationState } from "history";
 import Store from '../Stores/Store';
+import Footer from '../Footer';
 
 interface IProps {
-    someOfYourOwnProps: any;
     history: History<LocationState>;
-    someMorePropsIfNeedIt: any;
 }
 
 class CreateUser extends Component<IProps, { userName: string, password: string, roomId: string, error: boolean, errorMessage: string }> {
-    constructor(props: any) {
+    constructor(props: IProps) {
         super(props)
         this.state = {
             userName: '',
             password: '',
-            roomId: '',
+            roomId: Store.getRoom().roomId,
             error: false,
             errorMessage: ''
         }
@@ -55,13 +55,15 @@ class CreateUser extends Component<IProps, { userName: string, password: string,
                         <input
                             placeholder="Password"
                             className="joinInput mt-20"
-                            type="text" onChange={
+                            type="password" onChange={
                                 (event) => this.setState({ password: (event.target.value) })
                             } />
                         <input
                             placeholder="Room ID"
                             className="joinInput mt-20"
-                            type="text" onChange={
+                            type="text"
+                            value={Store.getRoom().roomId ? Store.getRoom().roomId : undefined}
+                            onChange={
                                 (event) => this.setState({ roomId: (event.target.value) })
                             } />
                         <div style={{ flex: 1, flexDirection: 'row' }}>
@@ -70,14 +72,25 @@ class CreateUser extends Component<IProps, { userName: string, password: string,
                                 if (!this.state.userName || !this.state.password || !this.state.roomId) {
                                     this.setState({ errorMessage: 'Please fill all the fields', error: true })
                                 } else {
-                                    const roomNameAvailable = await client.query({
+                                    const checkRoom = await client.query({
                                         query: GET_ROOM_BY_ID,
                                         variables: {
                                             id: this.state.roomId,
                                         }
                                     })
-                                    if (!roomNameAvailable.data.room) {
+                                    const usersInRoom = await client.query({
+                                        query: CHECK_USERNAME_AVAILABLE,
+                                        variables: {
+                                            roomId: this.state.roomId,
+                                        }
+                                    })
+
+                                    const sameName = usersInRoom.data.usersInRoom.filter(item => item.userName === this.state.userName)
+                                    console.log(sameName)
+                                    if (!checkRoom.data.roomById) {
                                         this.setState({ errorMessage: 'Room wasn\'t found, please check room ID', error: true })
+                                    } else if (sameName.length>0) {
+                                        this.setState({ errorMessage: 'The username is taken', error: true })
                                     } else {
                                         const { data } = await client.mutate({
                                             mutation: ADD_USER,
@@ -91,6 +104,8 @@ class CreateUser extends Component<IProps, { userName: string, password: string,
                                             userName: data.addUser.userName,
                                             roomId: data.addUser.roomId
                                         })
+                                        Store.setRoom(checkRoom.data.roomById.roomName, data.addUser.roomId)
+                                        this.props.history.push('/chat')
                                     }
                                 }
                             }}>Register</BlueButtonSecondPage>
@@ -109,9 +124,12 @@ class CreateUser extends Component<IProps, { userName: string, password: string,
         )
 
         return (
-            <div className="joinOuterContainer">
-                {userForm}
-            </div>
+            <>
+                <div className="joinOuterContainer">
+                    {userForm}
+                </div>
+                <Footer />
+            </>
         )
     }
 }

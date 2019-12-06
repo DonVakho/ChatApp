@@ -37,6 +37,7 @@ const RoomType = new GraphQLObjectType({
     })
 });
 
+
 const UserType = new GraphQLObjectType({
     name: 'User',
     fields: () => ({
@@ -44,6 +45,13 @@ const UserType = new GraphQLObjectType({
         userName: { type: GraphQLString },
         password: { type: GraphQLString },
         roomId: { type: GraphQLString },
+        lastActive: {type: GraphQLString },
+        room: {
+            type: RoomType,
+            resolve(parent, _){
+                return Room.findById(parent.roomId)
+            }
+        }
     })
 });
 
@@ -81,10 +89,11 @@ const RootQuery = new GraphQLObjectType({
                 return Message.find({ roomId: args.id });
             }
         },
-        users: {
+        usersInRoom: {
             type: new GraphQLList(UserType),
-            resolve(_, __) {
-                return User.find({});
+            args: { roomId: { type: GraphQLString } },
+            resolve(_, args) {
+                return User.find({roomId: args.roomId});
             }
         },
         room: {
@@ -118,9 +127,21 @@ const Mutation = new GraphQLObjectType({
                 let user = new User({
                     userName: args.userName,
                     password: args.password,
+                    lastActive: new Date().toString(),
                     roomId: args.roomId
                 })
                 return user.save();
+            }
+        },
+        updateLastActive: {
+            type: UserType,
+            args: {
+                id: { type: new GraphQLNonNull(GraphQLString) }
+            },
+            resolve(_, args){
+                return User.findByIdAndUpdate(args.id, {
+                    lastActive: new Date().toString()
+                }, { new: true });
             }
         },
         removeUser: {

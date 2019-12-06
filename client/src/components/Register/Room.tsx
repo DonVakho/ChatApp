@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { ApolloConsumer } from 'react-apollo'
+import { History, LocationState } from "history";
 
 import {
     FormControl,
@@ -9,26 +10,24 @@ import {
 import {
     GET_ROOM_CONFIRMATION,
     ADD_ROOM
-} from '../Queries/Queries'
+} from '../Queries'
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import {
     PurpleButtonSecondPage,
     BackButton
-} from '../StyledComponents/Styled'
+} from '../Styled'
 
-import { History, LocationState } from "history";
 import Store from '../Stores/Store';
+import Footer from '../Footer'
 
 interface IProps {
-    someOfYourOwnProps: any;
     history: History<LocationState>;
-    someMorePropsIfNeedIt: any;
 }
 
 class CreateRoom extends Component<IProps, { roomName: string, error: boolean, errorMessage: string }> {
-    constructor(props: any) {
+    constructor(props: IProps) {
         super(props)
         this.state = {
             roomName: '',
@@ -72,9 +71,7 @@ class CreateRoom extends Component<IProps, { roomName: string, error: boolean, e
                                             }
                                         })
                                         this.setState({ errorMessage: '', error: false })
-                                        Store.setRoom( data.addRoom.roomName, data.addRoom.id)
-                                        console.log(data)
-                                        console.log(Store.getRoom())
+                                        Store.setRoom(data.addRoom.roomName, data.addRoom.id)
                                         this.props.history.push('/room-id')
                                     }
                                 }
@@ -94,9 +91,12 @@ class CreateRoom extends Component<IProps, { roomName: string, error: boolean, e
         )
 
         return (
-            <div className="joinOuterContainer">
-                {roomForm}
-            </div>
+            <>
+                <div className="joinOuterContainer">
+                    {roomForm}
+                </div>
+                <Footer />
+            </>
         )
     }
 }

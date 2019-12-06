@@ -8,41 +8,45 @@ import { Link } from 'react-router-dom'
 import {
     BlueButtonSecondPage,
     BackButton
-} from '../StyledComponents/Styled'
+} from '../Styled'
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import Store from '../Stores/Store';
+import Footer from '../Footer'
 
 const RoomId = observer(() => {
     var [roomId] = useState(Store.getRoom().roomId)
     return (
-        <div className="outerContainer">
-            <div className="joinInnerContainer">
-                <Card>
-                    <CardContent>
-                        <Typography color="textSecondary">
-                            Copy and use this roomId to register User
+        <>
+            <div className="outerContainer">
+                <div className="joinInnerContainer">
+                    <Card>
+                        <CardContent>
+                            <Typography color="textSecondary">
+                                Copy and use this roomId to register User
                     </Typography>
-                        <hr />
-                        <Typography variant="h5" component="h2">
-                            {roomId}
-                        </Typography>
-                    </CardContent>
+                            <hr />
+                            <Typography variant="h5" component="h2">
+                                {roomId}
+                            </Typography>
+                        </CardContent>
 
-                </Card>
-                <div style={{ flex: 1, flexDirection: 'row' }}>
-                    <Link to="/register-user" >
-                        <BlueButtonSecondPage> Register User</BlueButtonSecondPage>
-                    </Link>
-                    <Link to="/create-room" >
-                        <BackButton>
-                            <ArrowBackIcon />
-                        </BackButton>
-                    </Link>
+                    </Card>
+                    <div style={{ flex: 1, flexDirection: 'row' }}>
+                        <Link to="/register-user" >
+                            <BlueButtonSecondPage> Register User</BlueButtonSecondPage>
+                        </Link>
+                        <Link to="/create-room" >
+                            <BackButton>
+                                <ArrowBackIcon />
+                            </BackButton>
+                        </Link>
+                    </div>
                 </div>
             </div>
-        </div>
+            <Footer />
+        </>
     )
 })
 

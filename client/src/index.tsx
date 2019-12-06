@@ -10,7 +10,7 @@ import App from './App';
 
 const cache = new InMemoryCache();
 const link = new HttpLink({
-    uri: 'http://localhost:5000/entrance'
+    uri: 'http://10.99.17.16:5000/entrance/'
 })
 const client = new ApolloClient({
     link,

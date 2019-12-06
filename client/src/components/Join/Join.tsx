@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { ApolloConsumer } from 'react-apollo'
+import { History, LocationState } from "history";
 
 import {
     FormControl,
@@ -10,26 +11,22 @@ import {
     GreenButton,
     BlueButton,
     PurpleButton
-} from '../StyledComponents/Styled'
+} from '../Styled'
 
 import {
     GET_USER_CONFIRMATION
-} from '../Queries/Queries'
+} from '../Queries'
 
 import Store from '../Stores/Store'
-
+import Footer from '../Footer'
 import './Join.css';
 
-import { History, LocationState } from "history";
-
 interface IProps {
-    someOfYourOwnProps: any;
     history: History<LocationState>;
-    someMorePropsIfNeedIt: any;
 }
 
 class Join extends Component<IProps, { userName: string, password: string, error: boolean, errorMessage: string }> {
-    constructor(props: any) {
+    constructor(props: IProps) {
         super(props)
         this.state = {
             userName: '',
@@ -78,6 +75,8 @@ class Join extends Component<IProps, { userName: string, password: string, error
                                         userName: data.userConf.userName,
                                         roomId: data.userConf.roomId
                                     })
+                                    Store.setRoom(data.userConf.room.roomName, data.userConf.roomId)
+                                    this.props.history.push('/chat')
                                 }
                             }
                         }}>Sign In</GreenButton>
@@ -105,9 +104,12 @@ class Join extends Component<IProps, { userName: string, password: string, error
         )
 
         return (
-            <div className="joinOuterContainer">
-                {loginForm}
-            </div>
+            <>
+                <div className="joinOuterContainer">
+                    {loginForm}
+                </div>
+                <Footer />
+            </>
         )
     }
 }
