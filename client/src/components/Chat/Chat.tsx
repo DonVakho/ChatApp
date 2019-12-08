@@ -22,7 +22,7 @@ import './Chat.css'
 var socket: any;
 
 const Chat = observer(() => {
-    const ENDPOINT: string = 'http://10.99.17.16:5000'
+    const ENDPOINT: string = Store.HOST + ':5000'
     var [loggedUser] = useState(Store.getUser())
     var [room] = useState(Store.getRoom())
     var [users, setUsers] = useState([]);

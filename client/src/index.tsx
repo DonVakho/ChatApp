@@ -8,9 +8,11 @@ import { HttpLink } from 'apollo-link-http';
 import './index.css';
 import App from './App';
 
+import Store from './components/Stores/Store'
+
 const cache = new InMemoryCache();
 const link = new HttpLink({
-    uri: 'http://10.99.17.16:5000/entrance/'
+    uri: Store.HOST + ':5000/entrance/'
 })
 const client = new ApolloClient({
     link,

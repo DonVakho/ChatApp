@@ -2,7 +2,8 @@ import { observable } from 'mobx'
 import { IUser, IRoom } from '../../interfaces'
 
 class Store {
-
+    @observable
+    HOST = 'http://localhost' // http://10.99.17.16
     @observable
     private user: IUser = {
         userName: '',
