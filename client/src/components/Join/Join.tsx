@@ -14,7 +14,8 @@ import {
 } from '../Styled'
 
 import {
-    GET_USER_CONFIRMATION
+    GET_USER_CONFIRMATION,
+    UPDATE_ACTIVE_STAUS
 } from '../Queries'
 
 import Store from '../Stores/Store'
@@ -56,7 +57,7 @@ class Join extends Component<IProps, { userName: string, password: string, error
                                 (event) => this.setState({ password: (event.target.value) })
                             } />
 
-                        <GreenButton onClick={async (e) => {
+                        <GreenButton variant="outlined" onClick={async (e) => {
                             e.preventDefault()
                             if (!this.state.userName || !this.state.password) {
                                 this.setState({ errorMessage: 'Please fill Username and Password', error: true })
@@ -72,21 +73,33 @@ class Join extends Component<IProps, { userName: string, password: string, error
                                     this.setState({ errorMessage: 'Username or Password is incorect', error: true })
                                 } else {
                                     Store.setUser({
+                                        id: data.userConf.id,
                                         userName: data.userConf.userName,
                                         roomId: data.userConf.roomId
                                     })
                                     Store.setRoom(data.userConf.room.roomName, data.userConf.roomId)
+                                    const {errors} = await client.mutate({
+                                        mutation: UPDATE_ACTIVE_STAUS,
+                                        variables: {
+                                            id: data.userConf.id
+                                        }
+                                    })
+                                    if (errors) {
+                                        alert("some error")
+                                    }
                                     this.props.history.push('/chat')
                                 }
                             }
                         }}>Sign In</GreenButton>
                         <div style={{ flex: 1, flexDirection: 'row' }}>
                             <BlueButton
+                                variant="outlined"
                                 className="mt-20-r"
                                 onClick={() => { this.props.history.push('/register-user') }} >
                                 Register User
                             </BlueButton>
                             <PurpleButton
+                                variant="outlined"
                                 className="mrg-l wdt-half"
                                 onClick={() => { this.props.history.push('/create-room') }} >
                                 Create Room

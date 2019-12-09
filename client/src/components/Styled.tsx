@@ -1,11 +1,12 @@
 import {
     withStyles,
     Theme,
+    fade,
 } from '@material-ui/core/styles';
 
 import {
     Button,
-    Fab
+    IconButton
 } from '@material-ui/core';
 
 import {
@@ -18,10 +19,10 @@ import {
 export const GreenButton = withStyles((theme: Theme) => ({
     root: {
         color: theme.palette.getContrastText(purple[500]),
-        backgroundColor: green[900],
+        backgroundColor: fade(green[500], .5),
         marginTop: '20px',
         '&:hover': {
-            backgroundColor: green[700],
+            backgroundColor: green[600],
         },
     },
 }))(Button);
@@ -29,7 +30,7 @@ export const GreenButton = withStyles((theme: Theme) => ({
 export const BlueButton = withStyles((theme: Theme) => ({
     root: {
         color: theme.palette.getContrastText(blue[500]),
-        backgroundColor: blue[800],
+        backgroundColor: fade(blue[800], .5),
         marginTop: '20px',
         marginRight: '1%',
         width: '49%',
@@ -42,7 +43,7 @@ export const BlueButton = withStyles((theme: Theme) => ({
 export const PurpleButton = withStyles((theme: Theme) => ({
     root: {
         color: theme.palette.getContrastText(purple[500]),
-        backgroundColor: purple[800],
+        backgroundColor: fade(purple[800], .5),
         marginTop: '20px',
         marginLeft: '1%',
         width: '49%',
@@ -55,7 +56,7 @@ export const PurpleButton = withStyles((theme: Theme) => ({
 export const BlueButtonSecondPage = withStyles((theme: Theme) => ({
     root: {
         color: theme.palette.getContrastText(blue[500]),
-        backgroundColor: blue[800],
+        backgroundColor: fade(blue[800], .5),
         marginTop: '20px',
         marginRight: '1%',
         width: '79%',
@@ -68,25 +69,24 @@ export const BlueButtonSecondPage = withStyles((theme: Theme) => ({
 export const PurpleButtonSecondPage = withStyles((theme: Theme) => ({
     root: {
         color: theme.palette.getContrastText(purple[500]),
-        backgroundColor: purple[800],
+        backgroundColor: fade(purple[800], .5),
         marginTop: '20px',
         marginRight: '1%',
         width: '79%',
         '&:hover': {
             backgroundColor: purple[600],
         },
-    },
+    }
 }))(Button);
 
 export const BackButton = withStyles((theme: Theme) => ({
     root: {
         color: theme.palette.getContrastText(blue[500]),
-        backgroundColor: grey[800],
         marginTop: '20px',
-        marginLeft: '1%',
-        width: '19%',
+        marginLeft: '7%',
+        marginRight: '6.5%',
         '&:hover': {
             backgroundColor: grey[600],
         },
     },
-}))(Fab);
+}))(IconButton);

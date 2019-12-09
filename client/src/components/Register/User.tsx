@@ -67,7 +67,7 @@ class CreateUser extends Component<IProps, { userName: string, password: string,
                                 (event) => this.setState({ roomId: (event.target.value) })
                             } />
                         <div style={{ flex: 1, flexDirection: 'row' }}>
-                            <BlueButtonSecondPage onClick={async (e) => {
+                            <BlueButtonSecondPage  variant="outlined" onClick={async (e) => {
                                 e.preventDefault()
                                 if (!this.state.userName || !this.state.password || !this.state.roomId) {
                                     this.setState({ errorMessage: 'Please fill all the fields', error: true })
@@ -101,6 +101,7 @@ class CreateUser extends Component<IProps, { userName: string, password: string,
                                             }
                                         })
                                         Store.setUser({
+                                            id: data.addUser.id,
                                             userName: data.addUser.userName,
                                             roomId: data.addUser.roomId
                                         })

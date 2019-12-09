@@ -50,7 +50,7 @@ class CreateRoom extends Component<IProps, { roomName: string, error: boolean, e
                                 (event) => this.setState({ roomName: (event.target.value) })
                             } />
                         <div style={{ flex: 1, flexDirection: 'row' }}>
-                            <PurpleButtonSecondPage onClick={async (e) => {
+                            <PurpleButtonSecondPage variant="outlined" onClick={async (e) => {
                                 e.preventDefault()
                                 if (!this.state.roomName) {
                                     this.setState({ errorMessage: 'Please Enter name', error: true })

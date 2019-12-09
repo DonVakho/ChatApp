@@ -1,4 +1,5 @@
 export interface IUser {
+    id: string,
     userName: string,
     roomId: string
 }
@@ -20,4 +21,9 @@ export interface IAddUserReturn {
 export interface ISocketEvent {
     user: string,
     text: string
+}
+
+export interface IOtherUsers {
+    userName: string,
+    lastActive: string
 }

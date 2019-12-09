@@ -10,6 +10,7 @@ query($roomName: String!){
 export const GET_USER_CONFIRMATION = gql`
 query($userName: String!, $password: String!){
     userConf(userName: $userName, password: $password){
+        id,
         userName,
         roomId,
         room {
@@ -45,8 +46,17 @@ mutation($roomName: String!){
 export const ADD_USER = gql`
 mutation($userName: String!, $password: String!, $roomId: String!){
   addUser(userName: $userName, password: $password, roomId: $roomId){
-    userName
+    id,
+    userName,
     roomId
   }
+}
+`
+
+export const UPDATE_ACTIVE_STAUS = gql`
+mutation($id: String!){
+    updateLastActive(id: $id) {
+        lastActive
+    }
 }
 `

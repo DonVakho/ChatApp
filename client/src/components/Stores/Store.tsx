@@ -6,6 +6,7 @@ class Store {
     HOST = 'http://localhost' // http://10.99.17.16
     @observable
     private user: IUser = {
+        id: '',
         userName: '',
         roomId: ''
     }
@@ -19,7 +20,7 @@ class Store {
     @observable
     private unauthorizedAttempt: boolean = false
 
-    public setUser(user: IUser = { userName: '', roomId: '' }) {
+    public setUser(user: IUser = { id: '', userName: '', roomId: '' }) {
         this.user = user
     }
 

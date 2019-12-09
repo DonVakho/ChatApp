@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 import io from 'socket.io-client'
 import { observer } from 'mobx-react'
 import { Redirect } from 'react-router-dom'
-
 import { CircularProgress } from '@material-ui/core'
 
 import {
     IErrorObject,
-    ISocketEvent
+    ISocketEvent,
+    IOtherUsers
 } from '../../interfaces'
 
 import Store from '../Stores/Store'
@@ -16,6 +16,7 @@ import InfoBar from '../InfoBar/InfoBar'
 import Input from '../Input/Input'
 import Messages from '../Messages/Messages'
 import NavBar from '../NavBar'
+import StatusNotice from './StatusNotice'
 
 import './Chat.css'
 
@@ -29,12 +30,19 @@ const Chat = observer(() => {
     var [message, setMessage] = useState('')
     var [messages, setMessages] = useState([] as ISocketEvent[])
     var [color, setColor] = useState("primary" as any)
+    var [others, setothers] = useState([] as IOtherUsers[])
 
     if (!loggedUser.userName || !room.roomName) {
         Store.setUnauthorizedAttempt()
         return <Redirect to='/' />
     } else {
         Store.setUnauthorizedAttempt(false)
+
+        useEffect(() => {
+            fetch(`${Store.HOST}:5000/entrance?query={usersInRoom(roomId:"${room.roomId}"){userName,lastActive}}`)
+                .then(res => res.json())
+                .then(res => setothers(res.data.usersInRoom))
+        }, [room.roomId, users])
 
         useEffect(() => {
             socket = io(ENDPOINT)
@@ -83,11 +91,14 @@ const Chat = observer(() => {
             <Messages messages={messages} name={loggedUser.userName} />
             <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
         </div>
-    )   
+    )
 
     const waitingWindow = (
-        <div className="spinerContainer">
-            <CircularProgress color={color} size="300px" />
+        <div>
+            <div className="spinerContainer">
+                <CircularProgress color={color} size="300px" />
+            </div>
+            <StatusNotice others={others} thisUserName={loggedUser.userName} thisUserId={loggedUser.id} />
         </div>
     )
 
