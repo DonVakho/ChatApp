@@ -4,7 +4,7 @@ const socketio = require('socket.io')
 const express = require('express')
 const http = require('http')
 const cors = require('cors')
-const schema = require( './schema/schema')
+const schema = require('./schema/schema')
 const router = require('./router')
 
 const {
@@ -21,7 +21,9 @@ const server = http.createServer(app)
 const io = socketio(server)
 
 //connect to database
-const uri = "mongodb+srv://user_vakho:123@chatapp-nisch.mongodb.net/test?retryWrites=true&w=majority"
+// const uri = "mongodb+srv://user_vakho:123@chatapp-nisch.mongodb.net/test?retryWrites=true&w=majority"
+// const uri = "mongodb://localhost:27017/chat-db"
+const uri = "mongodb://mongo:27017/chat-db"
 
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connection.once('open', () => {
@@ -38,9 +40,9 @@ io.on('connection', (socket) => {
 
             socket.emit('message', { user: 'admin', text: `${user.name}, welcome to the room ${user.room}` })
             socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name}, has joined !` })
-            
+
             io.to(user.room).emit('roomData', { room: user.room, users: getAllUsersInRom(user.room) })
-            
+
             callbakc()
         }
 
@@ -55,7 +57,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         const user = removeUser(socket.id)
         if (user) {
-            console.log(`deleted user ${user.name}` );
+            console.log(`deleted user ${user.name}`);
             io.to(user.room).emit('message', { user: 'admin', text: `${user.name}, has left` })
             io.to(user.room).emit('roomData', { room: user.room, users: getAllUsersInRom(user.room) })
         }
